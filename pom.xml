@@ -141,12 +141,6 @@
     </dependencyManagement>
 
     <dependencies>
-        <!-- Inner dependencies -->
-        <dependency>
-            <groupId>com.dutytrail.arch.lib</groupId>
-            <artifactId>dt-arch-lib</artifactId>
-            <version>1.0.2</version>
-        </dependency>
 
         <!--Third Parties -->
         <dependency>
@@ -213,12 +207,6 @@
     </dependencies>
 
     <repositories>
-
-        <repository>
-            <id>project.local</id>
-            <name>project</name>
-            <url>file:${project.basedir}/src/main/resources/repo</url>
-        </repository>
 
         <repository>
             <id>spring-snapshots</id>
