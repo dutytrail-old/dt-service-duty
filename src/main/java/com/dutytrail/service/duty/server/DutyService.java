@@ -25,6 +25,11 @@ public class DutyService {
         return "Duty Service Alive. Profile in use: "+this.configPingAlive;
     }
 
+    @RequestMapping(method = RequestMethod.GET, value = "/createDataBase", produces = MediaType.APPLICATION_JSON)
+    public void createDataBase() {
+        this.dutyDAO.createDataBase();
+    }
+
     @RequestMapping(method = RequestMethod.GET, value = "/duty/{dutyId}", produces = MediaType.APPLICATION_JSON)
     public Duty duty(@PathVariable("dutyId") String dutyId) {
         return this.dutyDAO.getDuty(dutyId);

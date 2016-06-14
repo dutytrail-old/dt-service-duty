@@ -17,6 +17,26 @@ public class DutyDAO extends BaseDAO {
     @Value("${sql.select.lastInsertId}") private String lastInsertId;
     @Value("${sql.delete.duty}") private String deleteDuty;
 
+    public void createDataBase(){
+        String createDuty = "CREATE TABLE dt_duty (id MEDIUMINT NOT NULL AUTO_INCREMENT, name varchar(100) NOT NULL DEFAULT '', PRIMARY KEY (id)) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+        String createUser = "CREATE TABLE dt_user (id MEDIUMINT NOT NULL AUTO_INCREMENT, name varchar(100) NOT NULL DEFAULT '', PRIMARY KEY (id)) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+        PreparedStatement ps = null;
+        ResultSet resultSet = null;
+
+        try {
+            //insert the task
+            ps = con.prepareStatement(createDuty);
+            ps.executeUpdate();
+            ps = con.prepareStatement(createUser);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            this.closeAll(ps, resultSet);
+        }
+    }
+
     public Duty getDuty(String dutyId) {
         PreparedStatement ps = null;
         ResultSet resultSet = null;
