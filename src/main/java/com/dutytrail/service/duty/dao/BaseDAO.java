@@ -1,11 +1,13 @@
 package com.dutytrail.service.duty.dao;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.sql.*;
 
+@Slf4j
 @Component
 class BaseDAO {
 
@@ -21,11 +23,11 @@ class BaseDAO {
     public void initConnection() {
         try {
             if(this.con == null) {
-                System.out.println("Driver: "+driver);
-                System.out.println("Url: "+url);
-                System.out.println("Schema: "+schema);
-                System.out.println("User: "+user);
-                System.out.println("Password: "+password);
+                log.info("Driver: "+driver);
+                log.info("Url: "+url);
+                log.info("Schema: "+schema);
+                log.info("User: "+user);
+                log.info("Password: "+password);
 
                 Class.forName(this.driver).newInstance();
                 this.con = DriverManager.getConnection(url + schema, user, password);
