@@ -21,6 +21,12 @@ class BaseDAO {
     public void initConnection() {
         try {
             if(this.con == null) {
+                System.out.println("Driver: "+driver);
+                System.out.println("Url: "+url);
+                System.out.println("Schema: "+schema);
+                System.out.println("User: "+user);
+                System.out.println("Password: "+password);
+
                 Class.forName(this.driver).newInstance();
                 this.con = DriverManager.getConnection(url + schema, user, password);
             }
