@@ -1,13 +1,11 @@
 package com.dutytrail.service.duty.dao;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.sql.*;
 
-@Slf4j
 @Component
 class BaseDAO {
 
@@ -23,16 +21,23 @@ class BaseDAO {
     public void initConnection() {
         try {
             if(this.con == null) {
-                log.info("Driver: "+driver);
-                log.info("Url: "+url);
-                log.info("Schema: "+schema);
-                log.info("User: "+user);
-                log.info("Password: "+password);
-
                 Class.forName(this.driver).newInstance();
                 this.con = DriverManager.getConnection(url + schema, user, password);
             }
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    void closeAll(PreparedStatement preparedStatement, ResultSet resultSet) {
+        try {
+            if(preparedStatement!=null){
+                preparedStatement.close();
+            }
+            if(resultSet!=null){
+                resultSet.close();
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
