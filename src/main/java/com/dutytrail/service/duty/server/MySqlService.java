@@ -14,11 +14,12 @@ public class MySqlService {
     @Autowired
     private MySqlDAO mySqlDAO;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/mysql/create", produces = MediaType.APPLICATION_JSON)
-    public void createDataBase() {
-        log.info("Creating database...");
-        this.mySqlDAO.createDataBase();
-        log.info("Database created.");
+    @RequestMapping(method = RequestMethod.GET, value = "/db/script", produces = MediaType.APPLICATION_JSON)
+    public String dbScript(@RequestParam(value = "name") String name) {
+        log.info("Executing script "+name);
+        this.mySqlDAO.executeScript(name);
+        log.info("Script "+name+" executed.");
+        return ("Script "+name+" executed.");
     }
 
 }
