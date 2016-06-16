@@ -96,6 +96,6 @@ public class DutyDAO extends BaseDAO {
         } finally {
             super.closeAll(ps, null);
         }
-        return -1l;
+        return -1L;
     }
 }

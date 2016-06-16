@@ -36,8 +36,8 @@ public class DutyService {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/duty", produces = MediaType.APPLICATION_JSON, consumes = MediaType.APPLICATION_JSON)
-    public Long postDuty(@RequestBody DutyInput dutyInput) {
-        return this.dutyDAO.postDuty(dutyInput.getName());
+    public Long postDuty(@RequestBody String name) {
+        return this.dutyDAO.postDuty(name);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/duty/{dutyId}", produces = MediaType.APPLICATION_JSON)
