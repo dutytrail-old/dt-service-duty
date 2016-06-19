@@ -69,6 +69,7 @@
     </build>
 
     <dependencyManagement>
+
         <dependencies>
             <dependency>
                 <!-- Import dependency management from Spring Boot -->
