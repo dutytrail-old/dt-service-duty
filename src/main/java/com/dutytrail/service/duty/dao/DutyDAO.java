@@ -16,6 +16,7 @@ public class DutyDAO extends BaseDAO {
 
     @Value("${sql.select.duty}") private String duty;
     @Value("${sql.select.listDuty}") private String listDuty;
+    @Value("${sql.select.listDutyByUser}") private String listDutyByUser;
     @Value("${sql.insert.duty}") private String insertDuty;
     @Value("${sql.select.lastInsertId}") private String lastInsertId;
     @Value("${sql.select.subscriptions}") private String subscriptions;
@@ -50,8 +51,12 @@ public class DutyDAO extends BaseDAO {
 
         try {
             dutyList = new ArrayList<>();
-            ps = con.prepareStatement(listDuty);
-            ps.setString(1, userId);
+            if(userId.equals("{userId}")){
+                ps = con.prepareStatement(listDuty);
+            }else {
+                ps = con.prepareStatement(listDutyByUser);
+                ps.setString(1, userId);
+            }
             resultSet = ps.executeQuery();
 
             while (resultSet.next()) {
