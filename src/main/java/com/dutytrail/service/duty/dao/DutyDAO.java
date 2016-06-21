@@ -17,6 +17,7 @@ public class DutyDAO extends BaseDAO {
     @Value("${sql.select.duty}") private String duty;
     @Value("${sql.select.listDuty}") private String listDuty;
     @Value("${sql.select.listDutyByUser}") private String listDutyByUser;
+    @Value("${sql.select.isSubscribed}") private String isSubscribed;
     @Value("${sql.insert.duty}") private String insertDuty;
     @Value("${sql.select.lastInsertId}") private String lastInsertId;
     @Value("${sql.select.subscriptions}") private String subscriptions;
@@ -173,6 +174,26 @@ public class DutyDAO extends BaseDAO {
             super.closeAll(ps, null);
         }
         return null;
+    }
+
+    public Boolean isSubscribed(Long userId, Long dutyId) {
+        PreparedStatement ps = null;
+        ResultSet resultSet = null;
+
+        try {
+            ps = con.prepareStatement(isSubscribed);
+            ps.setLong(1, userId);
+            ps.setLong(2, dutyId);
+            resultSet = ps.executeQuery();
+            if (resultSet.next()) {
+                return true;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            super.closeAll(ps, resultSet);
+        }
+        return false;
     }
 
     public Long deleteDuty(Long dutyId) {

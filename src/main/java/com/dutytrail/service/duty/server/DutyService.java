@@ -45,7 +45,7 @@ public class DutyService {
         return this.dutyDAO.postUserSubscribeDuty(userId, dutyId);
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/unsubscribe/{userId}/{dutyId}", produces = MediaType.APPLICATION_JSON, consumes = MediaType.APPLICATION_JSON)
+    @RequestMapping(method = RequestMethod.DELETE, value = "/unsubscribe/{userId}/{dutyId}", produces = MediaType.APPLICATION_JSON, consumes = MediaType.APPLICATION_JSON)
     public synchronized Long unsubscribe(@PathVariable("userId") Long userId, @PathVariable("dutyId") Long dutyId) {
         return this.dutyDAO.deleteUserSubscribeDuty(userId, dutyId);
     }
@@ -53,6 +53,11 @@ public class DutyService {
     @RequestMapping(method = RequestMethod.DELETE, value = "/duty/{dutyId}", produces = MediaType.APPLICATION_JSON)
     public synchronized Long deleteDuty(@PathVariable("dutyId") Long dutyId) {
         return this.dutyDAO.deleteDuty(dutyId);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/is/subscribed/{userId}/{dutyId}", produces = MediaType.APPLICATION_JSON)
+    public Boolean isSubscribed(@PathVariable("userId") Long userId, @PathVariable("dutyId") Long dutyId){
+        return this.dutyDAO.isSubscribed(userId, dutyId);
     }
 
 }
