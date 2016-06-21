@@ -23,6 +23,7 @@ public class DutyDAO extends BaseDAO {
     @Value("${sql.select.users}") private String usersQuery;
     @Value("${sql.delete.duty}") private String deleteDuty;
     @Value("${sql.insert.userSubscribeDuty}") private String insertUserSubscribeDuty;
+    @Value("${sql.delete.userSubscribeDuty}") private String deleteUserSubscribeDuty;
 
     public Duty getDuty(String dutyId) {
         PreparedStatement ps = null;
@@ -146,8 +147,23 @@ public class DutyDAO extends BaseDAO {
         PreparedStatement ps = null;
 
         try {
-            //insert the task
             ps = con.prepareStatement(insertUserSubscribeDuty);
+            ps.setLong(1, userId);
+            ps.setLong(2, dutyId);
+            return (long) ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            super.closeAll(ps, null);
+        }
+        return null;
+    }
+
+    public Long deleteUserSubscribeDuty(Long userId, Long dutyId) {
+        PreparedStatement ps = null;
+
+        try {
+            ps = con.prepareStatement(deleteUserSubscribeDuty);
             ps.setLong(1, userId);
             ps.setLong(2, dutyId);
             return (long) ps.executeUpdate();
