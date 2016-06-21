@@ -2,7 +2,7 @@ package com.dutytrail.service.duty.entity;
 
 import javax.xml.bind.annotation.*;
 
-@XmlRootElement(name = "DutyInput")
+@XmlRootElement(name = "dutyInput")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(propOrder = {"name"})
 public class DutyInput {

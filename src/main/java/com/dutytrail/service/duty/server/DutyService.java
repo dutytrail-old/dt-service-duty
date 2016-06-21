@@ -36,12 +36,15 @@ public class DutyService {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/duty", produces = MediaType.APPLICATION_JSON, consumes = MediaType.APPLICATION_JSON)
-    public Long postDuty(@RequestBody String name) {
-        return this.dutyDAO.postDuty(name);
+    public synchronized Long postDuty(@RequestBody String userIdHashName) {
+        String[] userAndHash = userIdHashName.split("#");
+        Long dutyId = this.dutyDAO.postDuty(userAndHash[1]);
+        this.dutyDAO.postUserSubscribeDuty(Long.valueOf(userAndHash[0]), dutyId);
+        return dutyId;
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/duty/{dutyId}", produces = MediaType.APPLICATION_JSON)
-    public Long deleteDuty(@PathVariable("dutyId") Long dutyId) {
+    public synchronized Long deleteDuty(@PathVariable("dutyId") Long dutyId) {
         return this.dutyDAO.deleteDuty(dutyId);
     }
 

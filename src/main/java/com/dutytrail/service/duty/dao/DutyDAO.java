@@ -1,6 +1,7 @@
 package com.dutytrail.service.duty.dao;
 
 import com.dutytrail.service.duty.entity.Duty;
+import com.dutytrail.service.duty.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class DutyDAO extends BaseDAO {
@@ -16,7 +18,10 @@ public class DutyDAO extends BaseDAO {
     @Value("${sql.select.listDuty}") private String listDuty;
     @Value("${sql.insert.duty}") private String insertDuty;
     @Value("${sql.select.lastInsertId}") private String lastInsertId;
+    @Value("${sql.select.subscriptions}") private String subscriptions;
+    @Value("${sql.select.users}") private String usersQuery;
     @Value("${sql.delete.duty}") private String deleteDuty;
+    @Value("${sql.insert.userSubscribeDuty}") private String insertUserSubscribeDuty;
 
     public Duty getDuty(String dutyId) {
         PreparedStatement ps = null;
@@ -28,7 +33,7 @@ public class DutyDAO extends BaseDAO {
             resultSet = ps.executeQuery();
 
             if (resultSet.next()) {
-                return new Duty(resultSet.getLong("id"), resultSet.getString("name"));
+                return new Duty(resultSet.getLong("id"), resultSet.getString("name"), this.getUsers(this.getSubscriptions(resultSet.getLong("id"))));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -46,10 +51,11 @@ public class DutyDAO extends BaseDAO {
         try {
             dutyList = new ArrayList<>();
             ps = con.prepareStatement(listDuty);
+            ps.setString(1, userId);
             resultSet = ps.executeQuery();
 
             while (resultSet.next()) {
-                dutyList.add(new Duty(resultSet.getLong("id"), resultSet.getString("name")));
+                dutyList.add(new Duty(resultSet.getLong("id"), resultSet.getString("name"), this.getUsers(this.getSubscriptions(resultSet.getLong("id")))));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -57,6 +63,53 @@ public class DutyDAO extends BaseDAO {
             super.closeAll(ps, resultSet);
         }
         return dutyList;
+    }
+
+    private ArrayList<Long> getSubscriptions(Long dutyId) {
+        PreparedStatement ps = null;
+        ResultSet resultSet = null;
+        ArrayList<Long> subcriptions = null;
+
+        try {
+            subcriptions = new ArrayList<>();
+            ps = con.prepareStatement(subscriptions);
+            ps.setLong(1, dutyId);
+            resultSet = ps.executeQuery();
+
+            while (resultSet.next()) {
+                subcriptions.add(resultSet.getLong("user_id"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            super.closeAll(ps, resultSet);
+        }
+        return subcriptions;
+    }
+
+    private ArrayList<User> getUsers(List<Long> userIds) {
+        PreparedStatement ps = null;
+        ResultSet resultSet = null;
+        ArrayList<User> users = null;
+
+        try {
+            users = new ArrayList<>();
+            ps = con.prepareStatement(usersQuery);
+            for(Long userId : userIds) {
+                ps.setLong(1, userId);
+                resultSet = ps.executeQuery();
+
+                while (resultSet.next()) {
+                    users.add(new User(resultSet.getLong("id"), resultSet.getString("first_name"), resultSet.getString("last_name"), resultSet.getString("email"), resultSet.getString("passphrase"), resultSet.getString("gender")));
+                }
+                ps.clearParameters();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            super.closeAll(ps, resultSet);
+        }
+        return users;
     }
 
     public Long postDuty(String name) {
@@ -80,6 +133,23 @@ public class DutyDAO extends BaseDAO {
             e.printStackTrace();
         } finally {
             super.closeAll(ps, resultSet);
+        }
+        return null;
+    }
+
+    public Long postUserSubscribeDuty(Long userId, Long dutyId) {
+        PreparedStatement ps = null;
+
+        try {
+            //insert the task
+            ps = con.prepareStatement(insertUserSubscribeDuty);
+            ps.setLong(1, userId);
+            ps.setLong(2, dutyId);
+            return (long) ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            super.closeAll(ps, null);
         }
         return null;
     }
