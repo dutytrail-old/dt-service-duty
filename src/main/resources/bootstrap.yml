@@ -8,14 +8,14 @@ eureka:
     hostname: ${DOMAIN:localhost}
   client:
     serviceUrl:
-      defaultZone: ${EUREKA_URL}/eureka/
+      defaultZone: ${EUREKA_URL:localhost:8761}/eureka/
 
 spring:
   application:
     name: dtserviceduty
   profiles:
-    active: ${ARCH_ENV}
+    active: ${ARCH_ENV:local}
   cloud:
     config:
-      profile: ${ARCH_ENV}
-      uri: ${CONF_URI:https://dt-arch-conf.herokuapp.com}
+      profile: ${ARCH_ENV:local}
+      uri: ${CONF_URI:localhost:8888}
