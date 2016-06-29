@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,13 @@ public class DutyService {
     @RequestMapping(method = RequestMethod.DELETE, value = "/duty/{dutyId}", produces = MediaType.APPLICATION_JSON)
     public synchronized Long deleteDuty(@PathVariable("dutyId") Long dutyId) {
         return this.dutyDAO.deleteDuty(dutyId);
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/duty/cascade/{dutyId}", produces = MediaType.APPLICATION_JSON)
+    public synchronized Long deleteCascade(@PathVariable("dutyId") Long dutyId){
+        Long delete = this.deleteDuty(dutyId);
+        Long unsubscribe = this.unsubscribe(null, dutyId);
+        return delete + unsubscribe;
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/is/subscribed/{userId}/{dutyId}", produces = MediaType.APPLICATION_JSON)
