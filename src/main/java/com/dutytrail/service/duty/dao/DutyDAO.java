@@ -2,11 +2,9 @@ package com.dutytrail.service.duty.dao;
 
 import com.dutytrail.service.duty.entity.Duty;
 import com.dutytrail.service.duty.entity.User;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
