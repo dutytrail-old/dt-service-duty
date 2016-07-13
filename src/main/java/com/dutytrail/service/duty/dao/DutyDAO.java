@@ -72,10 +72,9 @@ public class DutyDAO extends BaseDAO {
     }
 
     protected ArrayList<Long> getSubscriptions(Long dutyId) throws SQLException {
-        ArrayList<Long> subcriptions = null;
+        ArrayList<Long> subcriptions = new ArrayList<>();
 
         try {
-            subcriptions = new ArrayList<>();
             ps = con.prepareStatement(subscriptions);
             ps.setLong(1, dutyId);
             resultSet = ps.executeQuery();
@@ -85,17 +84,14 @@ public class DutyDAO extends BaseDAO {
             }
         } catch (SQLException e) {
             throw e;
-        } finally {
-            super.closeAll(ps, resultSet);
         }
         return subcriptions;
     }
 
     protected ArrayList<User> getUsers(List<Long> userIds) throws SQLException {
-        ArrayList<User> users = null;
+        ArrayList<User> users = new ArrayList<>();
 
         try {
-            users = new ArrayList<>();
             ps = con.prepareStatement(usersQuery);
             for(Long userId : userIds) {
                 ps.setLong(1, userId);
@@ -108,8 +104,6 @@ public class DutyDAO extends BaseDAO {
             }
         } catch (SQLException e) {
             throw e;
-        } finally {
-            super.closeAll(ps, resultSet);
         }
         return users;
     }

@@ -1,0 +1,31 @@
+server:
+  port: 9101
+
+ping:
+  alive: Config properties loaded from LOCAL profile
+
+# DB CONNECTION
+db:
+  url: jdbc:mysql://localhost:3306/
+  schema: dt_service_duty
+  driver: com.mysql.jdbc.Driver
+  user: root
+  password: 123
+
+# SQL
+sql:
+  select:
+    listDuty: select distinct d.id, d.name from dt_duty d, dt_user_subscribe_duty usd where usd.duty_id = d.id
+    listDutyByUser: select d.id, d.name from dt_duty d, dt_user_subscribe_duty usd where usd.duty_id = d.id and usd.user_id = ?
+    duty: select d.id, d.name from dt_duty d where d.id = ?
+    lastInsertId: select last_insert_id() as last_insert_id
+    subscriptions: select user_id from dt_user_subscribe_duty usd where usd.duty_id = ?
+    users: select u.id, u.first_name, u.last_name, u.email, u.passphrase, u.gender from dt_user u where u.id = ?
+    isSubscribed: select usd.duty_id from dt_user_subscribe_duty usd where usd.user_id = ? and usd.duty_id = ?
+  insert:
+    duty: insert into dt_duty (name) values (?)
+    userSubscribeDuty: insert into dt_user_subscribe_duty (user_id, duty_id) values (?, ?)
+  delete:
+    duty: delete from dt_duty where id = ?
+    userSubscribeDuty: delete from dt_user_subscribe_duty where user_id = ? and duty_id = ?
+    subscribeDuty: delete from dt_user_subscribe_duty where duty_id = ?
