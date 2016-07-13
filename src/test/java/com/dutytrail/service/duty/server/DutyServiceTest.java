@@ -107,14 +107,6 @@ public class DutyServiceTest {
     }
 
     @Test
-    public void deleteCascade() throws SQLException {
-        when(dutyDAO.deleteDuty(Mockito.anyLong())).thenReturn(1L);
-        when(dutyDAO.deleteUserSubscribeDuty(Mockito.anyLong(), Mockito.anyLong())).thenReturn(1L);
-        Long deleteCascadeReturn = this.dutyService.deleteCascade(1L);
-        Assert.assertNotNull(deleteCascadeReturn);
-    }
-
-    @Test
     public void isSubscribedTest() throws SQLException {
         when(dutyDAO.isSubscribed(Mockito.anyLong(), Mockito.anyLong())).thenReturn(Boolean.TRUE);
         Boolean isSubscribedReturn = this.dutyService.isSubscribed(1L, 1L);

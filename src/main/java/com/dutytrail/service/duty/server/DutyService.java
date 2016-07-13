@@ -54,13 +54,6 @@ public class DutyService {
         return this.dutyDAO.deleteDuty(dutyId);
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/duty/cascade/{dutyId}", produces = MediaType.APPLICATION_JSON)
-    public synchronized Long deleteCascade(@PathVariable("dutyId") Long dutyId) throws SQLException {
-        Long delete = this.deleteDuty(dutyId);
-        Long unsubscribe = this.unsubscribe(null, dutyId);
-        return delete + unsubscribe;
-    }
-
     @RequestMapping(method = RequestMethod.GET, value = "/is/subscribed/{userId}/{dutyId}", produces = MediaType.APPLICATION_JSON)
     public Boolean isSubscribed(@PathVariable("userId") Long userId, @PathVariable("dutyId") Long dutyId) throws SQLException {
         return this.dutyDAO.isSubscribed(userId, dutyId);
