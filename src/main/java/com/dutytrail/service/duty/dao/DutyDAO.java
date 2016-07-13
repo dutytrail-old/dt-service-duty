@@ -25,9 +25,11 @@ public class DutyDAO extends BaseDAO {
     @Value("${sql.delete.userSubscribeDuty}") private String deleteUserSubscribeDuty;
     @Value("${sql.delete.subscribeDuty}") private String deleteSubscribeDuty;
 
-    public Duty getDuty(String dutyId) {
-        PreparedStatement ps = null;
-        ResultSet resultSet = null;
+    private PreparedStatement ps = null;
+    private ResultSet resultSet = null;
+
+    public Duty getDuty(String dutyId) throws SQLException {
+        Duty resultDuty = null;
 
         try {
             ps = con.prepareStatement(duty);
@@ -35,19 +37,17 @@ public class DutyDAO extends BaseDAO {
             resultSet = ps.executeQuery();
 
             if (resultSet.next()) {
-                return new Duty(resultSet.getLong("id"), resultSet.getString("name"), this.getUsers(this.getSubscriptions(resultSet.getLong("id"))));
+                resultDuty = new Duty(resultSet.getLong("id"), resultSet.getString("name"), this.getUsers(this.getSubscriptions(resultSet.getLong("id"))));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw e;
         } finally {
             super.closeAll(ps, resultSet);
         }
-        return null;
+        return resultDuty;
     }
 
-    public ArrayList<Duty> getListDuty(String userId) {
-        PreparedStatement ps = null;
-        ResultSet resultSet = null;
+    public ArrayList<Duty> getListDuty(String userId) throws SQLException {
         ArrayList<Duty> dutyList = null;
 
         try {
@@ -64,16 +64,14 @@ public class DutyDAO extends BaseDAO {
                 dutyList.add(new Duty(resultSet.getLong("id"), resultSet.getString("name"), this.getUsers(this.getSubscriptions(resultSet.getLong("id")))));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw e;
         } finally {
             super.closeAll(ps, resultSet);
         }
         return dutyList;
     }
 
-    private ArrayList<Long> getSubscriptions(Long dutyId) {
-        PreparedStatement ps = null;
-        ResultSet resultSet = null;
+    protected ArrayList<Long> getSubscriptions(Long dutyId) throws SQLException {
         ArrayList<Long> subcriptions = null;
 
         try {
@@ -86,16 +84,14 @@ public class DutyDAO extends BaseDAO {
                 subcriptions.add(resultSet.getLong("user_id"));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw e;
         } finally {
             super.closeAll(ps, resultSet);
         }
         return subcriptions;
     }
 
-    private ArrayList<User> getUsers(List<Long> userIds) {
-        PreparedStatement ps = null;
-        ResultSet resultSet = null;
+    protected ArrayList<User> getUsers(List<Long> userIds) throws SQLException {
         ArrayList<User> users = null;
 
         try {
@@ -111,17 +107,14 @@ public class DutyDAO extends BaseDAO {
                 ps.clearParameters();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw e;
         } finally {
             super.closeAll(ps, resultSet);
         }
         return users;
     }
 
-    public Long postDuty(String name) {
-        PreparedStatement ps = null;
-        ResultSet resultSet = null;
-
+    public Long postDuty(String name) throws SQLException {
         try {
             //insert the task
             ps = con.prepareStatement(insertDuty);
@@ -136,32 +129,27 @@ public class DutyDAO extends BaseDAO {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw e;
         } finally {
             super.closeAll(ps, resultSet);
         }
         return null;
     }
 
-    public Long postUserSubscribeDuty(Long userId, Long dutyId) {
-        PreparedStatement ps = null;
-
+    public Long postUserSubscribeDuty(Long userId, Long dutyId) throws SQLException {
         try {
             ps = con.prepareStatement(insertUserSubscribeDuty);
             ps.setLong(1, userId);
             ps.setLong(2, dutyId);
             return (long) ps.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw e;
         } finally {
-            super.closeAll(ps, null);
+            super.closeAll(ps, resultSet);
         }
-        return null;
     }
 
-    public Long deleteUserSubscribeDuty(Long userId, Long dutyId) {
-        PreparedStatement ps = null;
-
+    public Long deleteUserSubscribeDuty(Long userId, Long dutyId) throws SQLException {
         try {
             if(userId!=null) {
                 ps = con.prepareStatement(deleteUserSubscribeDuty);
@@ -173,44 +161,40 @@ public class DutyDAO extends BaseDAO {
             }
             return (long) ps.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw e;
         } finally {
-            super.closeAll(ps, null);
+            super.closeAll(ps, resultSet);
         }
-        return null;
     }
 
-    public Boolean isSubscribed(Long userId, Long dutyId) {
-        PreparedStatement ps = null;
-        ResultSet resultSet = null;
-
+    public Boolean isSubscribed(Long userId, Long dutyId) throws SQLException {
+        boolean isSuscribed = false;
         try {
             ps = con.prepareStatement(isSubscribed);
             ps.setLong(1, userId);
             ps.setLong(2, dutyId);
             resultSet = ps.executeQuery();
             if (resultSet.next()) {
-                return true;
+                isSuscribed = true;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw e;
         } finally {
             super.closeAll(ps, resultSet);
         }
-        return false;
+        return isSuscribed;
     }
 
-    public Long deleteDuty(Long dutyId) {
-        PreparedStatement ps = null;
+    public Long deleteDuty(Long dutyId) throws SQLException {
         try {
             ps = con.prepareStatement(deleteDuty);
             ps.setLong(1, dutyId);
             if(ps.executeUpdate()==1)
                 return dutyId;
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw e;
         } finally {
-            super.closeAll(ps, null);
+            super.closeAll(ps, resultSet);
         }
         return -1L;
     }
