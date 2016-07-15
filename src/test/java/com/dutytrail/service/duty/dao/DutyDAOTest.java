@@ -1,6 +1,5 @@
 package com.dutytrail.service.duty.dao;
 
-import com.dutytrail.service.duty.dao.DutyDAO;
 import com.dutytrail.service.duty.entity.User;
 import com.dutytrail.service.duty.starter.Duty;
 import org.junit.Assert;
