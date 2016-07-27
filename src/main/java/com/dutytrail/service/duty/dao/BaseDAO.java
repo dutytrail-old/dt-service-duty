@@ -24,8 +24,12 @@ class BaseDAO {
     }
 
     void closeAll(PreparedStatement ps, ResultSet resultSet) throws SQLException {
-        ps.close();
-        resultSet.close();
+        if(ps!=null) {
+            ps.close();
+        }
+        if(resultSet!=null){
+            resultSet.close();
+        }
     }
 
 }
